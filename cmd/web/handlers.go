@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 // handler #1: homepage
@@ -27,4 +29,15 @@ func home(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "ExecuteInternalServerError", http.StatusInternalServerError)
 	}
 	w.Write([]byte("Hello from Snippet ^.^"))
+}
+
+// handler #2: display a specific snippet
+
+func snippetView(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		http.NotFound(w, r)
+		return
+	}
+	fmt.Fprintf(w, "Display a specific snippet with ID %d", id)
 }
