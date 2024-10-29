@@ -41,3 +41,35 @@ func snippetView(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, "Display a specific snippet with ID %d", id)
 }
+
+// handler #3: creating a new snippet
+
+func snippetCreate(w http.ResponseWriter, r *http.Request) {
+
+	// POST method only allowed:
+
+	if r.Method != http.MethodPost { // "POST"
+
+		// Header().Set():
+		// before WriteHeader() + Write() (or http.Error())
+
+		w.Header().Set("Allow", http.MethodPost)
+
+		// 1. WriteHeader():
+		// a) only possible to call ONCE
+		// b) has to stay BEFORE Write()
+
+		// w.WriteHeader(http.StatusMethodNotAllowed) // 405
+		// w.Write([]byte("Method Not Allowed"))
+
+		// OR:
+
+		// 2. http.Error():
+		// a) most common ^^
+
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed) // 405
+		return
+	}
+	w.Write([]byte("Create a new snippet ^^"))
+
+}
